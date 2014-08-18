@@ -27,11 +27,6 @@ class admin_projetoModel extends \classes\Model\Model {
         'template' => array(
             'name'     => 'Template',
             'type'     => 'varchar',
-            'especial' => 'listfolder',
-            'listfolder' => array(
-                "folder" => TEMPLATES,
-                "hide"   => array('config')
-            ),
             'size'     => '50', 
             'grid'     => true
        	),
