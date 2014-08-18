@@ -1,0 +1,53 @@
+<?php
+
+$link = $this->Html->getLink(CURRENT_MODULE . "/".CURRENT_CONTROLLER . "/");
+$i = 0;
+$vars = array();
+$pluginst = isset($pluginst)?$pluginst:array();
+ksort($pluginst);
+
+$arr = array('usuario', 'admin', 'seguranca');
+foreach($pluginst as $plugname => $plug){
+    
+	$vars[$i]['plugin']     = ucfirst($plugname);
+	$status                 = $plug['status'];
+        
+        $msg = "Deseja Realmente desinstalar este plugin?";
+        $vars[$i]['Instalação']  = "<a href='".$link ."unstall/".$plugname."' onClick=\"if(!confirm('$msg'))return false; \">Desinstalar</a>";
+
+        $msg = "Ao Desativar o plugin os visitantes do site não terão acesso ao conteúdo. Deseja Prosseguir?";
+        $vars[$i]['Ativação']    = "<a href='".$link ."disable/".$plugname."' onClick=\"if(!confirm('$msg'))return false; \">Desativar</a>";
+        
+        $msg = "Ao popular a tabela dados randômicos serão adicionados. Deseja prosseguir?";
+        $vars[$i]['Popular']     = "<a href='".$link ."populate/".$plugname."' onClick=\"if(!confirm('$msg'))return false; \">Popular</a>";
+        
+        $msg = "Ao fazer a atualização algumas colunas ou tabelas podem ser excluidas. Deseja prosseguir?";
+        $vars[$i]['Atualização']   = "<a href='".$link ."update/".$plugname."' onClick=\"if(!confirm('$msg'))return false; \">Atualizar</a>";
+        
+        if($status == "desinstalado"){
+            $vars[$i]['Instalação']  = "<a href='".$link ."install/".$plugname."'>Instalar</a>";
+            $vars[$i]['Popular']     = strip_tags($vars[$i]['Popular']);
+            $vars[$i]['Atualização'] = strip_tags($vars[$i]['Atualização']);
+            $vars[$i]['Ativação']    = strip_tags($vars[$i]['Ativação']);
+        }
+        elseif($status == "desativado"){
+            if(INSTALL_DB_ENABLE) $vars[$i]['Ativação'] = "<a href='".$link ."enable/".$plugname."'>Ativar</a>";
+        }
+        
+        if(in_array($plugname, $arr)){
+            $vars[$i]['Ativação']                              = strip_tags($vars[$i]['Ativação']);
+            $vars[$i]['Popular']                               = strip_tags($vars[$i]['Popular']);
+            if($status == "instalado") $vars[$i]['Instalação'] = strip_tags($vars[$i]['Instalação']);
+        }
+        
+        //retira os dados de acordo com as features
+        if(!INSTALL_DB_ENABLE)  {unset($vars[$i]['Ativação']);}
+        if(!INSTALL_DB_POPULATE){unset($vars[$i]['Popular']);}
+        if(!INSTALL_DB_UPDATE)  {unset($vars[$i]['Atualização']);}
+	$i++;
+}
+
+$this->LoadResource("html/table", "table");
+$this->table->draw($vars);
+
+?>

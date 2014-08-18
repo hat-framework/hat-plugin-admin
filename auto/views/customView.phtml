@@ -1,0 +1,9 @@
+<?php 
+$this->LoadComponent("admin/auto/action", 'act');
+$this->act->draw($actions);
+
+$action = CURRENT_ACTION;
+$this->LoadComponent($model, "comp");
+$this->comp->$action($model, $item);
+
+?>

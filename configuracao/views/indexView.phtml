@@ -1,0 +1,43 @@
+<?php
+
+$link  = $this->Html->getLink('admin');
+
+?>
+<a href="<?php echo $link; ?>">Home</a> > Configuração 
+
+<?php
+$this->LoadResource("html/table", "table");
+$i = 0;
+$link = $this->Html->getLink(LINK);
+foreach($configuracao as $name => $config){
+    $vars = array();
+    echo "<br/><br/><hr/><br/><h2>$name</h2>";
+    foreach($config as $n2 => $conf){
+        
+        if(!is_array($conf)){
+            $vars[$i]['Nome']       = ucfirst($conf);
+            $vars[$i]['Configurar'] = "<a href='$link/configure/$n2'>Configurar</a>";
+            $i++;
+        }
+        else{
+            $j = 0;
+            $vars2 = array();
+            foreach($conf as $name => $c){
+                $nome = explode("/", $c);
+                $nome = end($nome);
+                $vars2[$j]['Nome']       = ucfirst($nome);
+                $vars2[$j]['Configurar'] = "<a href='$link/configure/$c'>Configurar</a>";
+                $j++;
+            }
+            if(!empty ($vars2)){
+                echo "<br/><h3>$n2</h3>";
+                $this->table->draw($vars2);
+            }
+        }
+    }
+    if(!empty ($vars)){
+        $this->table->draw($vars);
+    }
+}
+
+?>

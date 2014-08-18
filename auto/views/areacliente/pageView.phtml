@@ -1,0 +1,10 @@
+<?php
+if(isset($title)){echo "<h1>$title</h1>";}
+if(!empty($item)){
+    $this->LoadComponent($component, "comp");
+    $this->comp->$comp_action($component, $item);
+}else{
+    echo "<h1>Nenhum conteúdo encontrado</h1>";
+    echo "<p>Não existe nenhum conteúdo relacionado nesta seção</p>";
+}
+?>

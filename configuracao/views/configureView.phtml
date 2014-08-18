@@ -1,0 +1,14 @@
+<?php 
+
+$link  = $this->Html->getLink(CURRENT_MODULE); 
+$link2 = $this->Html->getLink(LINK);
+
+?>
+<a href="<?php echo $link; ?>">Home</a> > <a href="<?php echo $link2; ?>">Configuração</a> > <?php echo $cfile;?>
+
+<?php
+
+$this->LoadResource('formulario', 'form');
+$this->form->NewForm($dados);
+
+?>

@@ -1,0 +1,18 @@
+<?php
+
+$link1  = $this->Html->getLink("admin/projeto");
+$link2 = URL . "admin/projeto.php?";
+echo "<a href='$link1/inserir'>inserir</a>";
+foreach($projetos as &$var){
+    $url1 = $link1 . "/inserir/".$var['cod_projeto'];
+    $url2 = $link1 . "/apagar/".$var['cod_projeto'];
+    $url3 = $link2 . "projeto=".$var['nome'];
+    unset($var['cod_projeto']);
+    
+    $var['Editar'] = "<a href='$url1'>editar</a>  <a href='$url2'>apagar</a>  <a href='$url3'>aplicar</a>";
+}
+
+$this->LoadResource("html/table", 'table');
+$this->table->draw($projetos);
+
+?>

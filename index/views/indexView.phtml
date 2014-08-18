@@ -1,0 +1,53 @@
+<?php $this->Html->LoadCss('area-admin'); ?>
+<h1>Painel de controle</h1>
+<?php if(isset($module_menu)){?>
+<div class="painel-item">
+    <div class="painel-item-titulo">
+        <h2>Plugins</h2>
+        <span class="painel-item-desc">Gerencie os dados dos plugins disponíveis</span>
+    </div>
+
+    <div class="painel-item-conteudo">
+        <?php 
+            foreach($module_menu as $name => $item){
+                $link = $this->Html->getLink($item[$name]);
+         ?>
+                <div class="link"><a href="<?php echo "{$link}"; ?>"><?php echo ucfirst($name); ?></a></div>
+        <?php }?>
+    </div>
+</div>
+
+<?php }?>
+
+<?php
+    
+    $temp = array_key_exists(CURRENT_MODULE, $module_menu)?$module_menu[CURRENT_MODULE]:array();
+    if(array_key_exists(CURRENT_MODULE, $temp)) unset($temp[CURRENT_MODULE]);
+    
+    if(empty ($temp)) $msg = "Nenhuma funcionalidade disponível, fale com o webmaster para mais detalhes";
+    else              $msg = "Acesse as funcionalidades disponíveis";
+
+    if(isset($temp)){
+?>
+<div class="painel-item">
+    <div class="painel-item-titulo">
+        <h2>Funcionalidades</h2>
+        <span class="painel-item-desc"><?php echo $msg; ?></span>
+    </div>
+
+    <div class="painel-item-conteudo">
+        <?php
+        foreach($temp as $name => $item){ ?>
+            <div class="link"><a href="<?php echo $this->Html->getLink($item); ?>"><?php echo ucfirst($name); ?></a></div>
+        <?php }?>
+    </div>
+</div>
+<?php }?>
+<!--
+<div class="painel-item">
+    <div class="painel-item-titulo">
+        <h2>Mensagens</h2>
+        <span class="painel-item-desc">Visualize as mensagens enviadas para você pelo site</span>
+    </div>
+    <div class="link"><a href="<?php echo $this->Html->getLink('contato/mensagens'); ?>">Mensagens</a></div>
+</div> -->

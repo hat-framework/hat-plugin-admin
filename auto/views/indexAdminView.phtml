@@ -1,0 +1,10 @@
+<?php 
+    $this->Html->LoadCss('area-admin');
+    $temp = $module_menu[CURRENT_MODULE];
+    unset($temp[CURRENT_MODULE]);
+    if(empty ($temp)) $msg = "Nenhuma funcionalidade disponível, fale com o webmaster para mais detalhes";
+    else              $msg = "Gerencie as funcionalidades disponíveis";
+    $title = "Administrar ". ucfirst(CURRENT_MODULE);
+    $this->LoadComponent("admin/auto/funcionalidade", 'func');
+    $this->func->draw($temp, $msg, $title);
+?>

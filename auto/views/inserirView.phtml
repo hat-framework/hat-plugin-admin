@@ -1,0 +1,6 @@
+<?php 
+    $this->LoadComponent("admin/auto/action", 'act');
+    $this->act->draw($actions);
+    $this->LoadResource("formulario", "form"); 
+    $this->form->execute($model, $formulario);
+?>

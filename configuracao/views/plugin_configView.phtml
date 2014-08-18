@@ -1,0 +1,20 @@
+<?php 
+
+$link  = $this->Html->getLink(CURRENT_MODULE); 
+$link2 = $this->Html->getLink(LINK);
+
+$titulo    = array_key_exists('title', $dados)?$dados['title']: "Erro";
+$descricao = array_key_exists('description', $dados)?$dados['description']: "Erro";
+echo "<a href='$link'>Home</a> > <a href='$link2'>Configuração</a> > $titulo";
+
+echo "<hr/><h2>$titulo</h2>";
+echo "<p>$descricao</p><hr/>";
+if(array_key_exists('data', $dados)){
+    $this->LoadResource('formulario', 'form');
+    $this->form->NewForm($dados['data']);
+}else{
+    echo "<h1>Arquivo de configuração não existe</h1>";
+    echo "<p>O arquivo que você procura não existe</p>";
+}
+
+?>

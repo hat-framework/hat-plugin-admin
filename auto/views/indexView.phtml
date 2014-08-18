@@ -1,0 +1,8 @@
+<?php 
+$this->LoadComponent("admin/auto/action", 'act');
+$this->act->draw($actions);
+
+$this->LoadResource("grid", "grid");
+$this->grid->execute("", $model);
+
+?>

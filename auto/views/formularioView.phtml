@@ -1,0 +1,6 @@
+<h2><?php if(isset($titulo)) echo $titulo; ?></h2>
+<?php
+    
+    $values = isset($values)?$values:array();
+    $this->LoadResource('formulario', 'form');
+    $this->form->NewForm($dados, $values);

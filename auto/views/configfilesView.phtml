@@ -1,0 +1,24 @@
+<?php 
+
+if(isset($itens) && !empty ($itens)){
+    if(empty($_POST)){
+        foreach($itens as $name => $it){
+            $ins[$name] = $it['value'];
+        }
+    }
+    else $ins = $_POST;
+    
+    $this->LoadResource("formulario", 'form');
+    $this->form->NewForm($itens, $ins, array(), $ajax = false);
+    //$form = FormHelper::getInstanceOf();
+    //$form->Open("", "", false);
+    //$form->printable();
+    //foreach($itens as $name => $value){
+    //    $form->text($name, ucfirst($name), $value);
+    //}
+    //$form->Close();
+}else{
+    echo "arquivo de configuração não possui nenhuma definição";
+}
+
+?>
