@@ -35,10 +35,10 @@ class registerConfigurations extends classes\Classes\Object implements install_s
             private function LoadConfigClass($plugin){
                 $class  = "{$plugin}Configurations";
                 $file   = classes\Classes\Registered::getPluginLocation($plugin, true). "/Config/$class.php";
-                if(false === file_exists($file)){return false;}
-                
+                getTrueDir($file);
+                if(false === file_exists($file)){return $this->setErrorMessage("O arquivo da classe $class não foi encontrado no diretório de configurações do plugin $plugin!");}
                 require_once $file;
-                if(false === class_exists($class, false)){return false;}
+                if(false === class_exists($class, false)){return $this->setErrorMessage("A classe $class não foi encontrada no plugin $plugin");}
                 
                 //carrega o arquivo
                 $this->obj = new $class();
