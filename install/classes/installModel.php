@@ -236,12 +236,12 @@ class admin_installModel extends \classes\Model\Model{
         \classes\Utils\Log::save(LOG_INSTALACAO, "Realizando as mudanças dos models no banco de dados");
         $bool = true;
         if($type === "update"){
-            $bool = $bool && $this->iobj->install($plugin);
+            $bool = $bool and $this->iobj->install($plugin);
         }
-        $bool = $bool && $this->iobj->$type($plugin);
+        $bool = $bool and $this->iobj->$type($plugin);
         $this->setMessages($this->iobj->getMessages());
         $subplugins = $this->iobj->getPlugin($plugin);
-        return $bool && ($type == "unstall")? $this->deleteModels($plugin):$this->registerModels($plugin, $subplugins);
+        return $bool and ($type == "unstall")? $this->deleteModels($plugin):$this->registerModels($plugin, $subplugins);
     }
     
     public function updatePluginModels($plugin){
@@ -275,7 +275,7 @@ class admin_installModel extends \classes\Model\Model{
     }
     
     private function registerModels($plugin, $subplugins){
-        \classes\Utils\Log::save(LOG_INSTALACAO, "Iniciando o registro de modelos");
+        \classes\Utils\Log::save(LOG_INSTALACAO, "<h4>Iniciando o registro de modelos</h4>");
         //registra o plugin atual e os subplugins no sistema
         $this->LoadClassFromPlugin('admin/install/inclasses/registerModels', 'rmds');
         if(!$this->rmds->register($plugin, $subplugins)){            
