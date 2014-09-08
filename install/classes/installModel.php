@@ -39,6 +39,7 @@ class admin_installModel extends \classes\Model\Model{
     public function install($module){
         
         //inicializa as variaveis
+        $this->setLog($module);
         $module = $this->getModuleName($module);
         $var    = $this->getPlugin($module);
         
@@ -86,6 +87,7 @@ class admin_installModel extends \classes\Model\Model{
 
     
     public function unstall($module){
+        $this->setLog($module);
         $module = $this->getModuleName($module);
         $var = $this->getPlugin($module);
         if(!empty ($var) && $var['status'] == 'desinstalado'){
@@ -192,8 +194,15 @@ class admin_installModel extends \classes\Model\Model{
         $this->pop->populate($module);
     }
 
+    private function setLog($module){
+        if(defined('CURRENT_ACTION') && CURRENT_ACTION === "updateall"){
+            if(!defined("LOG_INSTALACAO")){define("LOG_INSTALACAO", "plugins/updateall");}
+        }
+        if(!defined("LOG_INSTALACAO")){define("LOG_INSTALACAO", "plugins/instalacao/$module");}
+    }
+    
     public function update($module){
-
+        $this->setLog($module);
         $module = $this->getModuleName($module);
         $var = $this->getPlugin($module);
         if(empty ($var)){
@@ -275,7 +284,7 @@ class admin_installModel extends \classes\Model\Model{
     }
     
     private function registerModels($plugin, $subplugins){
-        \classes\Utils\Log::save(LOG_INSTALACAO, "<h4>Iniciando o registro de modelos</h4>");
+        \classes\Utils\Log::save(LOG_INSTALACAO, "<h4>Iniciando o registro de modelos do plugin $plugin</h4>");
         //registra o plugin atual e os subplugins no sistema
         $this->LoadClassFromPlugin('admin/install/inclasses/registerModels', 'rmds');
         if(!$this->rmds->register($plugin, $subplugins)){            
