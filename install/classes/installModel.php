@@ -242,7 +242,7 @@ class admin_installModel extends \classes\Model\Model{
 
     private function Start($plugin, $type){
         //carrega o modulo de instalacao
-        \classes\Utils\Log::save(LOG_INSTALACAO, "Realizando as mudanças dos models no banco de dados");
+        \classes\Utils\Log::save(LOG_INSTALACAO, "Realizando as mudanças dos models no banco de dados ($type)");
         $bool = true;
         if($type === "update"){
             $bool = $bool and $this->iobj->install($plugin);
