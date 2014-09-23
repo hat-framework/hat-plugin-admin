@@ -1,4 +1,6 @@
-<?php $this->Html->LoadCss('tela_login');?>
-<div class="erro">
-    <h2><?php echo @$msg; ?></h2>
-</div>
+<?php
+if($filename !== "" && file_exists($filename)){
+    include $filename;
+}else{
+    echo "<h2>$erro</h2>";
+}
