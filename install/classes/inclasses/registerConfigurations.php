@@ -1,6 +1,6 @@
 <?php
 
-class registerConfigurations extends classes\Classes\Object implements install_subsystem{
+class registerConfigurations extends classes\Classes\Object implements \install_subsystem{
     
     private $obj        = null;
     private $files      = array();

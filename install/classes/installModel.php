@@ -202,7 +202,10 @@ class admin_installModel extends \classes\Model\Model{
     }
     
     public function update($module){
+        //if($module == 'usuario'){return true;}
+        //if($module == 'mensagem'){die("oinc");}
         $this->setLog($module);
+        \classes\Utils\Log::save(LOG_INSTALACAO, "<h2>Iniciando atualização do plugin $module</h2>", 'noDate');
         $module = $this->getModuleName($module);
         $var = $this->getPlugin($module);
         if(empty ($var)){
@@ -217,10 +220,9 @@ class admin_installModel extends \classes\Model\Model{
             return false;
         }
         
-       \classes\Utils\Log::save(LOG_INSTALACAO, "Atualizando os modelos do plugin");
-        //$this->updatePluginModels($module);
-        $this->setSuccessMessage("O plugin $module foi atualizado corretamente!");
-        return true;
+        $msg = "O plugin $module foi atualizado corretamente!";
+        \classes\Utils\Log::save(LOG_INSTALACAO, $msg);
+        return $this->setSuccessMessage($msg);
     }
 
 
@@ -284,7 +286,7 @@ class admin_installModel extends \classes\Model\Model{
     }
     
     private function registerModels($plugin, $subplugins){
-        \classes\Utils\Log::save(LOG_INSTALACAO, "<h4>Iniciando o registro de modelos do plugin $plugin</h4>");
+        \classes\Utils\Log::save(LOG_INSTALACAO, "<h4>Iniciando o registro de modelos do plugin $plugin</h4>", 'noDate');
         //registra o plugin atual e os subplugins no sistema
         $this->LoadClassFromPlugin('admin/install/inclasses/registerModels', 'rmds');
         if(!$this->rmds->register($plugin, $subplugins)){            
@@ -301,9 +303,11 @@ class admin_installModel extends \classes\Model\Model{
                 $cod             = $this->rmds->getCodPlugin();
                 $install_classes = $this->FindInstallClasses();
                 foreach($install_classes as $class){
-                    if($class === 'registerModels'){continue;}
                     $this->LoadClassFromPlugin("admin/install/inclasses/$class", 'r');
-                    if(!($this->r instanceof install_subsystem)) {continue;}
+                    if(!($this->r instanceof install_subsystem)) {
+                        \classes\Utils\Log::save(LOG_INSTALACAO, "$class Não é uma instância de install_subsystem ");
+                        continue;
+                    }
                     \classes\Utils\Log::save(LOG_INSTALACAO, "Executando $class");
                     if(!$this->r->register($plugin, $cod)){
                         \classes\Utils\Log::save(LOG_INSTALACAO, "Erro ao executar a classe $class!");
@@ -319,8 +323,9 @@ class admin_installModel extends \classes\Model\Model{
                 $dir = realpath(dirname(__FILE__));
                 $this->LoadResource('files/dir', 'dobj');
                 $install_classes = $this->dobj->getArquivos("$dir/inclasses");
-                foreach($install_classes as &$iclass){
+                foreach($install_classes as $cod => &$iclass){
                     $iclass = str_replace('.php', '', $iclass);
+                    if($iclass === 'registerModels'){unset($install_classes[$cod]);}
                 }
                 return $install_classes;
             }
@@ -342,7 +347,7 @@ class admin_installModel extends \classes\Model\Model{
 
         $data    = $this->plug->selecionar();
         $plugins = array();
-        foreach($data as $arr) $plugins[$arr['plugnome']] = $arr;
+        foreach($data as $arr) {$plugins[$arr['plugnome']] = $arr;}
         
         $this->LoadModel("usuario/login", 'uobj');
         $webm = $this->uobj->UserIsWebmaster();
@@ -360,13 +365,13 @@ class admin_installModel extends \classes\Model\Model{
             if(in_array($plugname, $this->blacklist)){
                 unset($plugins[$plugname]);
             }
-            if(!$webm && in_array($plugname, $this->webmasterlist)) unset($plugins[$plugname]);
+            if(!$webm && in_array($plugname, $this->webmasterlist)) {unset($plugins[$plugname]);}
             
         }
 
         //remove os plugins cujas pastas foram removidas mas que permaneceram no banco de dados
         foreach($plugins as $pname => $parr){
-            if(in_array($pname, $arq)) continue;
+            if(in_array($pname, $arq)) {continue;}
             $this->unstall($pname);
             unset($plugins[$pname]);
         }
@@ -375,7 +380,7 @@ class admin_installModel extends \classes\Model\Model{
         if($inseriu){
             $data    = $this->plug->selecionar();
             $plugins = array();
-            foreach($data as $arr) $plugins[$arr['plugnome']] = $arr;
+            foreach($data as $arr) {$plugins[$arr['plugnome']] = $arr;}
         }
         
         return $plugins;

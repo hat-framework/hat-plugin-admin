@@ -94,8 +94,8 @@ class registerActions extends classes\Classes\Object implements \install_subsyst
     private function insertAction($cod_model, $cod_perm, $url, $arr){
         
         //verifica se uma ação possui tutorial ou algum tipo de notificação
-        if(array_key_exists('notificar', $arr))$post['notificar'] = $arr['notificar'];
-        if(array_key_exists('tutorial', $arr)) $post['tutorial']  = $arr['tutorial'];
+        if(array_key_exists('notificar', $arr)){$post['notificar'] = $arr['notificar'];}
+        if(array_key_exists('tutorial', $arr)) {$post['tutorial']  = $arr['tutorial'];}
         $arr['needcod'] = (isset($arr['needcod']))?$arr['needcod']:'n';
         if(is_bool($arr['needcod'])){
             $arr['needcod'] = ($arr['needcod'])?"s":'n';
@@ -125,42 +125,35 @@ class registerActions extends classes\Classes\Object implements \install_subsyst
         foreach($this->perfis as $perf){
             $insert = array();
             foreach($perf as $key => $val){
-                if(is_array($val)) continue;
+                if(is_array($val)) {continue;}
                 $insert["usuario_perfil_$key"] = $val;
             }
             
             $cod_perfil = $perf['cod'];
             $where = "usuario_perfil_nome = '".$perf['nome']."' OR usuario_perfil_cod = '$cod_perfil'";
-            if($this->up->getCount($where) == 0) {
-                if(!$this->up->inserir($insert))
+            $pdata = $this->up->selecionar(array('usuario_perfil_cod'), $where, 1);
+            if(empty($pdata)) {
+                if(!$this->up->inserir($insert)){
                     $this->erro[] = $this->up->getErrorMessage();
+                }
             }
             
-            if(!isset($perf['permissions']) || empty($perf['permissions'])) continue;
-            foreach($perf['permissions'] as $permname => $val){
-                
-                if(is_numeric($permname)){
-                    $permname = $val;
-                    $val      = 's';
-                }
-                $cod_perm = $this->perm->getCodPermissionByName($permname);
-                if($cod_perm == "") continue;
-                
-                $add['plugins_acesso_permitir'] = $val;
-                $where = "usuario_perfil_cod = '$cod_perfil' AND plugins_permissao_cod = '$cod_perm'";
-                if($this->acc->getCount($where) == 0){
-                    $add['usuario_perfil_cod']      = $cod_perfil;
-                    $add['plugins_permissao_cod']   = $cod_perm;
-                    if(!$this->acc->inserir($add)) 
-                        $this->erro[] = $this->acc->getErrorMessage();
-                }else{
-                    if(!$this->acc->editar(array($cod_perm, $cod_perfil), $add))
-                       $this->erro[] = $this->acc->getErrorMessage();
-                }
-            }
+            if(!isset($perf['permissions']) || empty($perf['permissions'])) {continue;}
+            $this->updatePerfilPermissions($perf, $cod_perfil);
         }
     }
-
+    
+            private function updatePerfilPermissions($perf, $cod_perfil){
+                foreach($perf['permissions'] as $permname => $val){
+                    if(is_numeric($permname)){
+                        $permname = $val;
+                        $val      = 's';
+                    }
+                    $cod_perm = $this->perm->getCodPermissionByName($permname);
+                    $this->acc->addRow($cod_perfil, $cod_perm,$val);
+                }
+                $this->acc->insertAddedRows();
+            }
 
     private function init($plugin, $cod_plugin){
         $this->cod_plugin = $cod_plugin;
@@ -171,8 +164,8 @@ class registerActions extends classes\Classes\Object implements \install_subsyst
     }
     
     private function hasError(){
-        if(empty($this->erro)) return true;
-        
+        if(empty($this->erro)) {return true;}
+        print_rh($this->erro);
         \classes\Utils\Log::save(LOG_INSTALACAO, $this->erro);
         $erro = implode ("<hr/>", $this->erro);
         $this->setAlertMessage($erro);
@@ -204,6 +197,11 @@ class registerActions extends classes\Classes\Object implements \install_subsyst
     
     private function registerPermission(){
         $this->LoadClassFromPlugin('admin/install/inclasses/registerPermissions', 'rp');
-        $this->rp->register($this->action_obj, $this->cod_plugin , $this->permissoes);
+        
+        //adiciona as permissoes ao plugin que estiverem no array de permissoes
+        $this->rp->register($this->cod_plugin , $this->permissoes);
+        
+        //apaga as permissoes do plugin que não estiverem no array de permissoes
+        $this->rp->unregister($this->cod_plugin , $this->permissoes);
     }
 }

@@ -148,5 +148,3 @@ class registerModels extends classes\Classes\Object{
     }
     
 }
-
-?>
