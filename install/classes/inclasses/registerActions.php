@@ -207,5 +207,3 @@ class registerActions extends classes\Classes\Object implements \install_subsyst
         $this->rp->register($this->action_obj, $this->cod_plugin , $this->permissoes);
     }
 }
-
-?>

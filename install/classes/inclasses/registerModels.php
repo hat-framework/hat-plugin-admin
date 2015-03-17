@@ -63,7 +63,8 @@ class registerModels extends classes\Classes\Object{
         $this->initModelVars($model, $name_model, $label, $description);
         
         //verifica se o subplugin já está registrado
-        if($this->smd->getCount("plugins_model_name = '$name_model'") > 0) return true;
+        $data = $this->smd->selecionar(array('plugins_model_name'), "plugins_model_name = '$name_model'");
+        if(!empty($data)) {return true;}
 
         //registra o modelo
         $out['cod_plugin']                  = $this->item['cod_plugin'];

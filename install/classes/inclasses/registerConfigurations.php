@@ -71,15 +71,15 @@ class registerConfigurations extends classes\Classes\Object implements install_s
         foreach($this->menu_itens as &$post){
             if(!isset($post['menuid'])){continue;}
             $toinsert['menuid'] = $post['menuid'];
-            $toinsert['menu']   = isset($post['menu']) ? $post['menu']  :ucfirst($post['menuid']);
+            $toinsert['menu']   = isset($post['menu'])  ?$post['menu']  :ucfirst($post['menuid']);
             $toinsert['url']    = isset($post['url'])   ?$post['url']   :'';
             $toinsert['ordem']  = isset($post['ordem']) ?$post['ordem'] :100;
             $toinsert['pai']    = isset($post['pai'])   ?$post['pai']   :"";
+            $toinsert['icon']   = isset($post['icon'])  ?$post['icon']  :"";
             $toinsert['plugin'] = trim($plugin);
-            $insert_array[] = $toinsert;
+            $insert_array[]     = $toinsert;
         }
         if(empty($insert_array)){return true;}
-        $bool = $this->propagateMessage($this->menu, 'importDataFromArray', $insert_array, true);
-        return $bool;
+        return $this->propagateMessage($this->menu, 'importDataFromArray', $insert_array, true);
     }        
 }

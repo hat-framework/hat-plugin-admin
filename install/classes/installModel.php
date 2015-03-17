@@ -292,23 +292,28 @@ class admin_installModel extends \classes\Model\Model{
             $this->setMessages($this->rmds->getMessages());
             return false;
         }
-        $cod = $this->rmds->getCodPlugin();
+        return $this->runInstallClasses($plugin);
         
-        
-        $install_classes = $this->FindInstallClasses();
-        foreach($install_classes as $class){
-            $this->LoadClassFromPlugin("admin/install/inclasses/$class", 'r');
-            if(!($this->r instanceof install_subsystem)) continue;
-            \classes\Utils\Log::save(LOG_INSTALACAO, "Executando $class");
-            if(!$this->r->register($plugin, $cod)){
-                \classes\Utils\Log::save(LOG_INSTALACAO, "abortado!");
-                \classes\Utils\Log::save(LOG_INSTALACAO, $this->r->getMessages());
-                $this->setMessages($this->r->getMessages());
-                return false;
-            }
-        }
-        return true;
     }
+    
+            private function runInstallClasses($plugin){
+                $bool            = true;
+                $cod             = $this->rmds->getCodPlugin();
+                $install_classes = $this->FindInstallClasses();
+                foreach($install_classes as $class){
+                    if($class === 'registerModels'){continue;}
+                    $this->LoadClassFromPlugin("admin/install/inclasses/$class", 'r');
+                    if(!($this->r instanceof install_subsystem)) {continue;}
+                    \classes\Utils\Log::save(LOG_INSTALACAO, "Executando $class");
+                    if(!$this->r->register($plugin, $cod)){
+                        \classes\Utils\Log::save(LOG_INSTALACAO, "Erro ao executar a classe $class!");
+                        \classes\Utils\Log::save(LOG_INSTALACAO, $this->r->getMessages());
+                        $this->setMessages($this->r->getMessages());
+                        $bool = false;
+                    }
+                }
+                return $bool;
+            }
     
             private function FindInstallClasses(){
                 $dir = realpath(dirname(__FILE__));
