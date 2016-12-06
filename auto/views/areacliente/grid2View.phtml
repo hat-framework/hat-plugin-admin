@@ -1,0 +1,18 @@
+<div class="col-lg-3">
+	<form method="POST" enctype="multipart/form-data">
+		<input type="file" name="file" class="form-control"/>
+		<input type="submit" class="form-control btn btn-info btn-inverse " value="Importar Via Arquivo"/>
+	</form>
+	<?php
+	
+	$this->LoadResource('formulario/filter', 'sgen')->genFilter($component);
+
+	?>
+</div>
+<hr/>
+<div class="col-lg-9">
+<?php 
+	if(isset($title)){echo "<h4>$title</h4>";}
+	$this->LoadComponent($component, 'vprod')->listInTable($component,$item);
+?>
+</div>
