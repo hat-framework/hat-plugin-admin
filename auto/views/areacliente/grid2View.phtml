@@ -1,10 +1,15 @@
 <div class="col-lg-3 col-md-4 col-sm-5 col-xs-12">
-    <form method="POST" enctype="multipart/form-data">
-        <input type="file" name="file" class="form-control"/>
-        <input type="submit" class="form-control btn btn-info btn-inverse " value="Importar Via Arquivo"/>
-    </form>
+    
     <?php
-    $this->LoadResource('formulario/filter', 'sgen')->genFilter($component);
+    if(isset($include_form) && $include_form){
+    ?>
+        <form method="POST" enctype="multipart/form-data">
+            <input type="file" name="file" class="form-control"/>
+            <input type="submit" class="form-control btn btn-info btn-inverse " value="Importar Via Arquivo"/>
+        </form>
+    <?php
+    }
+        $this->LoadResource('formulario/filter', 'sgen')->genFilter($component);
     ?>
 </div>
 <hr/>

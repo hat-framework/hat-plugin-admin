@@ -11,5 +11,3 @@ class exceptionController extends \classes\Controller\Controller{
     	$this->display("admin/exception/index");
     }
 }
-
-?>
