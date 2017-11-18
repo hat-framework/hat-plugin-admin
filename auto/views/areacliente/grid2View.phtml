@@ -1,23 +1,28 @@
-<div class="col-lg-3 col-md-4 col-sm-5 col-xs-12">
-    
-    <?php
-    if(isset($include_form) && $include_form){
-    ?>
-        <form method="POST" enctype="multipart/form-data">
-            <input type="file" name="file" class="form-control"/>
-            <input type="submit" class="form-control btn btn-info btn-inverse " value="Importar Via Arquivo"/>
-        </form>
-    <?php
-    }
-        $this->LoadResource('formulario/filter', 'sgen')->genFilter($component);
-    ?>
-</div>
-<hr/>
-<div class="col-lg-9 col-md-8 col-sm-7 col-xs-12">
 <?php
-if (isset($title)) {
+$css_main = "col-xs-12";
+if (isset($include_form) && $include_form && !isset($_GET['enviar'])) {
+  $css_form = 'col-lg-3 col-md-4 col-sm-5 col-xs-12 no-print';
+  $css_main = "col-lg-9 col-md-8 col-sm-7 col-xs-12";
+  ?>
+  <div class="<?php echo $css_form; ?>">
+    <form method="POST" enctype="multipart/form-data">
+      <input type="file" name="file" class="form-control"/>
+      <input type="submit" class="form-control btn btn-info btn-inverse " value="Importar Via Arquivo"/>
+    </form>
+    <?php if (isset($_GET['enviar'])) { ?>
+      <a type="submit" class="form-control btn btn-warning btn-inverse " href="<?php echo $this->Html->getLink($_GET['url'], false, true); ?>"/>Resetar formulário</a>
+      <?php
+    }
+    $this->LoadResource('formulario/filter', 'sgen')->genFilter($component);
+    ?>
+  </div>
+  <hr/>
+<?php } ?>
+<div class="<?php echo $css_main; ?>">
+  <?php
+  if (isset($title)) {
     echo "<h4>$title</h4>";
-}
-$this->LoadComponent($component, 'vprod')->listInTable($component, $item);
-?>
+  }
+  $this->LoadComponent($component, 'vprod')->listInTable($component, $item);
+  ?>
 </div>
