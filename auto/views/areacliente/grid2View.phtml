@@ -13,8 +13,9 @@ if ($form_html !== '') {
       </form>
       <?php
     }
+    $resetBtn = isset($css['reset-button']) ? $css['reset-button'] : 'btn-warning';
     if (isset($_GET['enviar'])) { ?>
-      <a type="submit" class="form-control btn btn-warning btn-inverse " href="<?php echo $this->Html->getLink($_GET['url'], false, true); ?>"/>Resetar formulário</a>
+      <a type="submit" class="form-control btn <?php echo $resetBtn; ?> btn-inverse " href="<?php echo $this->Html->getLink($_GET['url'], false, true); ?>"/>Resetar formulário</a>
       <?php
     }
     echo $form_html;
